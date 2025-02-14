@@ -2,6 +2,8 @@ const Get = require("../modules/Get");
 const Post = require("../modules/Post");
 
 exports.getUser = async (req, res, next) => {
+    console.log("ASDF", req);
+    
     let {userId} = req.body;
     let post = new Get();
     try{
@@ -34,6 +36,20 @@ exports.getFindUser = async (req, res, next) => {
     let post = new Get();
     try{
         post = await Get.getFindUser(search);
+        console.log(post[0]);
+        res.json(post[0]);
+
+    } catch (error){
+        console.log(error);
+        next(error);
+    }
+}
+
+exports.getAppointment = async (req, res, next) => {
+    let {userId} = req.body;
+    let post = new Get();
+    try{
+        post = await Get.getAppointments(userId);
         console.log(post[0]);
         res.json(post[0]);
 
@@ -94,6 +110,20 @@ exports.postChangeUserData = async (req, res, next) => {
         post = await Post.postChangeUserData(body);
         console.log(post[0]);
         res.json(post[0]);
+
+    } catch (error){
+        console.log("error", error);
+        next(error);
+    }
+}
+
+exports.postNewAppointment = async (req, res, next) => {
+    let body = req.body;
+    let post = new Post();
+    try{
+        post = await Post.postNewAppointment(body);
+        console.log(post);
+        res.json(post);
 
     } catch (error){
         console.log("error", error);

@@ -5,6 +5,7 @@
 
 const tintColorLight = '#0a7ea4';
 const tintColorDark = '#fff';
+const thatspink = '#f7d1d1';
 
 export const Colors = {
   light: {
