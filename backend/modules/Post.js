@@ -40,6 +40,40 @@ class Post {
         return db.execute(sql, values);
     }
 
+    static async postNewAppointment(body) {
+        // const test = {
+            // invited: ["1", "3"], 
+            // appointmentDate: "2025-02-20",
+            // creatorId: "1", 
+            // businessName: 'name',
+            // businessLocation: 'test2 street' 
+        // }
+
+        try{
+            const newAppointment = await db.execute(`
+                INSERT INTO appointments (businessName, businessLocation) VALUES ('${body.businessName}', '${body.businessLocation}')
+            `)
+
+            body.invited.map(async e => {
+                console.log(e);
+                try{
+                    await db.execute(`
+                        INSERT INTO appointmentstable (userId, appointmentId, appointmentDate, creatorId) 
+                        VALUES ('${e}', '${newAppointment[0].insertId}', '${body.appointmentDate}','${body.creatorId}')
+                    `)
+                }catch (error){
+                    console.log("error", error);
+                    return error;
+                }
+            })
+        }catch (error){
+            console.log("error", error);
+            return error;
+        }
+
+        return { success: true, message: "Termin erfolgreich erstellt." };
+    }
+
     static async postNewChat(body) {
         await db.execute(`
             INSERT INTO chat (timestamp) VALUES ('${body.chatTimestamp}')
@@ -57,7 +91,7 @@ class Post {
         VALUES ('${body.chatId}','${body.senderId}','${body.messagetext}')
         `;
 
-        return db.execute(sql, values);
+        return db.execute(sql);
     }
 
 

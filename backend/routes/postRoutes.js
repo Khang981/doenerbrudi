@@ -2,16 +2,24 @@ const express = require("express");
 const postControllers = require("../controllers/postControllers.js");
 const router = express.Router();
 
-router.route("/user").get(postControllers.getUser).post(postControllers.postChangeUserData);
+router.route("/user").post(postControllers.getUser);
 
-router.route("/getFindUser").get(postControllers.getFindUser);
+router.route("/getFindUser").post(postControllers.getFindUser);
 
-router.route("/Friends").get(postControllers.getFriendList);
+router.route("/Friends").post(postControllers.getFriendList);
 
-router.route("/FriendRequest").get(postControllers.getFriendRequest).post(postControllers.postFriendRequest);
+router.route("/getFriendRequest").post(postControllers.getFriendRequest)
 
-router.route("/getLogin").get(postControllers.getLogin);
+router.route("/postFriendRequest").post(postControllers.postFriendRequest);
 
-router.route("/chat").get(postControllers.getChatMessages).post(postControllers.postMessage)
+router.route("/getLogin").post(postControllers.getLogin);
+
+router.route("/chat").post(postControllers.getChatMessages)
+
+router.route("/postMessage").post(postControllers.postMessage)
+
+router.route("/postNewAppointment").post(postControllers.postNewAppointment)
+
+router.route("/getAppointment").post(postControllers.getAppointment)
 
 module.exports = router;

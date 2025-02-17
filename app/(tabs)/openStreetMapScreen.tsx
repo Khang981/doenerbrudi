@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, FlatList, Text, View } from 'react-native';
 import { getCoordinates, getDonerShops } from '../../scripts/services/openStreetMapService';
-import mapStyles from '../../scripts/styles/mapStyles';
+import mapStyles from '../../constants/styles/mapStyles';
 
 export default function MapScreen() {
     const [donerShops, setDonerShopsList] = useState([]);

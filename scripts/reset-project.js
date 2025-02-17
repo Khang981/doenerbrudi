@@ -63,9 +63,9 @@ const moveDirectories = async () => {
     console.log("\n📁 New /app directory created.");
 
     // Create index.tsx
-    const indexPath = path.join(newAppDirPath, "index.tsx");
+    const indexPath = path.join(newAppDirPath, "dashboard.tsx");
     await fs.promises.writeFile(indexPath, indexContent);
-    console.log("📄 app/index.tsx created.");
+    console.log("📄 app/dashboard.tsx created.");
 
     // Create _layout.tsx
     const layoutPath = path.join(newAppDirPath, "_layout.tsx");
@@ -74,7 +74,7 @@ const moveDirectories = async () => {
 
     console.log("\n✅ Project reset complete. Next steps:");
     console.log(
-      "1. Run `npx expo start` to start a development server.\n2. Edit app/index.tsx to edit the main screen.\n3. Delete the /app-example directory when you're done referencing it."
+      "1. Run `npx expo start` to start a development server.\n2. Edit app/dashboard.tsx to edit the main screen.\n3. Delete the /app-example directory when you're done referencing it."
     );
   } catch (error) {
     console.error(`Error during script execution: ${error}`);

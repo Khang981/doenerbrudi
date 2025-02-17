@@ -12,9 +12,14 @@ class Get {
             `
             SELECT * FROM user  
             WHERE id = '${userId}'
-            `;
+        `;
             
-        return db.execute(sql);
+        try{
+            return db.execute(sql);
+        }catch (error){
+            console.log(error);
+            return error
+        }
     }
 
     static getFindUser(search) {
@@ -28,9 +33,14 @@ class Get {
                 lastlogin 
             FROM user  
             WHERE deleted = 0 AND (username LIKE '%${search}%' OR nickname LIKE '%${search}%')
-            `;
+        `;
             
-        return db.execute(sql);
+        try{
+            return db.execute(sql);
+        }catch (error){
+            console.log(error);
+            return error
+        }
     }
 
     static getFriendList(userId) {
@@ -46,7 +56,12 @@ class Get {
             WHERE fl.userId = '${userId}' AND u.deleted = 0
         `;
     
-        return db.execute(sql);
+        try{
+            return db.execute(sql);
+        }catch (error){
+            console.log(error);
+            return error
+        }
     }
 
     static getFriendRequest(userId) {
@@ -57,7 +72,12 @@ class Get {
             WHERE receiverId = '${userId}'
         `;
     
-        return db.execute(sql);
+        try{
+            return db.execute(sql);
+        }catch (error){
+            console.log(error);
+            return error
+        }
     }
 
     static getLogin(username, email, password) {
@@ -79,7 +99,12 @@ class Get {
             `;  
         }
     
-        return db.execute(sql);
+        try{
+            return db.execute(sql);
+        }catch (error){
+            console.log(error);
+            return error
+        }
     }
 
     static getAppointments(userId) {
@@ -87,7 +112,7 @@ class Get {
             `
             SELECT 
                 a.*,
-                at.appointmentDate
+                at.appointmentDate,
                 at.accepted,
                 at.creatorId,
                 at.active
@@ -95,8 +120,13 @@ class Get {
             LEFT JOIN appointments AS a ON at.appointmentId = a.id
             WHERE at.userId = '${userId}' AND active = 1
             `;
-
-        return db.execute(sql);
+        
+        try{
+            return db.execute(sql);
+        }catch (error){
+            console.log(error);
+            return error
+        }
     }
 
     static getHistory(userId) {
@@ -111,8 +141,14 @@ class Get {
             FROM appointmentstable AS at
             LEFT JOIN appointments AS a ON at.appointmentId = a.id
             WHERE at.userId = '${userId}' AND active = 0
-            `;
-        return db.execute(sql);
+        `;
+
+        try{
+            return db.execute(sql);
+        }catch (error){
+            console.log(error);
+            return error
+        }
     }
 
     static getChatMessages(userId) {
@@ -125,9 +161,14 @@ class Get {
             LEFT JOIN chat AS c ON c.id = m.chatId
             LEFT JOIN chattable AS ct ON ct.chatId = m.chatId
             WHERE ct.userId = '${userId}'
-            `;
+        `;
 
-        return db.execute(sql);
+        try{
+            return db.execute(sql);
+        }catch (error){
+            console.log(error);
+            return error
+        }
     }
 }
 
