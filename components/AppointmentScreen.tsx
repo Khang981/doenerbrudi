@@ -2,7 +2,7 @@ import { AntDesign } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import React, { useState } from 'react';
 import { FlatList, Text, TouchableOpacity, View } from 'react-native';
-import styles from '../scripts/styles/AppointmentStyle';
+import styles from '../constants/styles/AppointmentStyle';
 
 const AppointmentScreen = ({ shop, onClose, onConfirm }) => {
   const [date, setDate] = useState(new Date());

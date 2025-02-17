@@ -6,7 +6,7 @@ import { Button, Modal, Text, TextInput, TouchableOpacity, View } from 'react-na
 import { FlatList, GestureHandlerRootView } from 'react-native-gesture-handler';
 import WebView from 'react-native-webview';
 import { getCoordinates, getDonerShops } from '../../scripts/services/openStreetMapService';
-import styles from '../../scripts/styles/mapStyles';
+import styles from '../../constants/styles/mapStyles';
 
 //export default 
 function InteractiveMapScreen() {
