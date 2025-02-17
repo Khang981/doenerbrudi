@@ -5,18 +5,24 @@ const Card = ({ title, content }) => {
   return (
     <View style={styles.card}>
       <View style={styles.cardHeader}>
-        <Text style={styles.cardTitle}>{title}</Text>
+        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          <Text style={styles.cardTitle} numberOfLines={1} ellipsizeMode="tail">{title}</Text>
+        </View>
       </View>
       <View style={styles.cardContent}>
-        <Text>{content}</Text>
+        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          <Text>{content}</Text>
+          <Text>test</Text>
+        </View>
       </View>
+ 
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: 'white',
+    backgroundColor: '#ff8380',
     borderRadius: 8,
     elevation: 5, // Für Android-Schatten
     margin: 16,
