@@ -53,5 +53,29 @@ export const getDonerShops = async (latitude, longitude) => {
     } catch (error) {
         console.error('Fehler bei der Anfrage:', error);
         return [];
+    };
+};
+
+export const getAddressFromCoordinates = async (lat, lon) => {
+  try {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`
+    );
+    
+    const data = await response.json();
+
+    if (data.address) {
+      return{
+        street: data.address.road || "Straße unbekannt",
+        city: data.address.city || data.address.town || data.address.village || "Stadt unbekannt",
+        postcode: data.address.postcode || "PLZ unbekannt",
+        };
+      } else {
+        return { street: "Unbekannt", city: "unbekannt", postcode: "unbekannt"};
+      }
+  } catch (error) {
+      console.error("Fehler beim Reverse-Geocoding:", error);
+      return { street: "fehler", city: "fehler", postcode: "Fehler"};
     }
 };
+

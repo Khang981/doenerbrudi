@@ -24,6 +24,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     paddingLeft: 10,
     borderRadius: 5,
+    marginTop: 30,
   },
   bottomBar: {
     position: 'absolute',
@@ -52,6 +53,15 @@ const styles = StyleSheet.create({
     width: '80%',
     maxHeight: '50%', // Die Höhe des Modals auf 50% des Bildschirms begrenzen
     borderRadius: 10,
+  },
+  modalTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  modalSubtitle: {
+    fontSize: 18,
+    marginTop: 10,
   },
   listItem: {
     padding: 10,
@@ -85,6 +95,41 @@ const styles = StyleSheet.create({
   mapstyle: {
     flex: 1,
   },
+  closeButton: {
+    position: 'absolute',
+    top: 0,
+    right: 15,
+    zIndex: 10,
+    backgroundColor: 'white',
+    padding: 10,
+    borderRadius: 20,
+    elevation: 5,
+    shadowColor: "#000",
+  },
+fullscreenModal: {
+  flex:1,
+  backgroundColor: 'white',
+  paddingTop: 50,
+  justifyContent: 'space-between',
+},
+closeAppointmentButton: {
+  position: 'absolute',
+  top: 40,
+  right: 20,
+  zIndex: 10,
+},
+createAppointmentButton: {
+  backgroundColor: 'green',
+  padding: 15,
+  borderRadius: 10,
+  alignItems: 'center',
+  margin: 20,
+},
+createAppointmentButtonText: {
+  color: 'white',
+  fontWeight: 'bold',
+  fontSize: 16,
+},
 });
 
 export default styles;

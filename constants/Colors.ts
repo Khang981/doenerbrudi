@@ -24,3 +24,10 @@ export const Colors = {
     tabIconSelected: tintColorDark,
   },
 };
+
+/** CSS HEX 
+--lebhaftes-gelbliches-rosa: #ff8380;
+--lebhaftes-rot: #f4181e;
+--lebhaftes-rot-2: #fe474c;
+--weiß: #ffffff;
+--lebhaftes-rötliches-orange: #fd0400; */
