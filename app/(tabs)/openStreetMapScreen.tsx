@@ -5,8 +5,8 @@ import React, { useEffect, useState } from 'react';
 import { Button, Modal, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { FlatList, GestureHandlerRootView } from 'react-native-gesture-handler';
 import WebView from 'react-native-webview';
-import { getCoordinates, getDonerShops } from '../../scripts/services/openStreetMapService';
 import styles from '../../constants/styles/mapStyles';
+import { getCoordinates, getDonerShops } from '../../scripts/services/openStreetMapService';
 
 //export default 
 function InteractiveMapScreen() {
@@ -181,10 +181,14 @@ function InteractiveMapScreen() {
 
         const newAppointment = {
             id: Math.random().toString(36).substr(2,9),
-            shopName: selectedShopForAppointment.tags?.name,
-            address: selectedShopForAppointment.tags?.["addr:street"],
-            date: selectedDate.toISOString(),
-            friends: selectedFriends || [],
+            businessName: selectedShopForAppointment.tags?.name,
+            businessLocation: `${selectedShopForAppointment.tags?.["addr:street"] || ""}, 
+                                ${selectedShopForAppointment.tags?.["addr:housenumber"] || ""}, 
+                                ${selectedShopForAppointment.tags?.["addr:postcode"] || ""}, 
+                                ${selectedShopForAppointment.tags?.["addr:city"] || ""}`,
+            appointmentDate: selectedDate.toISOString().split("T")[0],
+            creatorID: currentUser?.id,
+            invited: [currentUser?.id, ...(selectedFriends?.map(friend => friend.id))],
         };
         
         setAppointments((prevAppointments) => [...prevAppointments, newAppointment]);

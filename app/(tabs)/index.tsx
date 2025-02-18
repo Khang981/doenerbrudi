@@ -1,14 +1,16 @@
-import React from 'react';
-import axios from 'axios';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
 import Card from '@/components/Card';
+import { ThemedText } from '@/components/ThemedText';
 import {Button, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import { useBottomTabOverflow } from '@/components/ui/TabBarBackground';
 import { useRouter } from 'expo-router';
+>>>>>>> master
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import { useRouter } from 'expo-router';
+import React from 'react';
+import { Button, RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useUserContext } from '../context';
 
 export default function Dashboard() {
@@ -84,7 +86,7 @@ export default function Dashboard() {
             <View>
                 {data.map( e => (
                   <>
-                    <Card key={e.id} title={e.businessName} content={e.businessLocation} />
+                    <Card key={e.id} data={e} />
                   </>
                 ))}
             </View>

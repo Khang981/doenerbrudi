@@ -12,7 +12,7 @@ export const getCoordinates = async (city) => {
     if (data && data.length > 0) {
       return data;
     } else {
-      console.error(' Kein Ergebnis du lusche');
+      console.error(' Kein Ergebnis');
       return [];
     }
   } catch (error) {

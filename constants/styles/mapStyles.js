@@ -114,7 +114,7 @@ fullscreenModal: {
 },
 closeAppointmentButton: {
   position: 'absolute',
-  top: 40,
+  top: 50,
   right: 20,
   zIndex: 10,
 },
