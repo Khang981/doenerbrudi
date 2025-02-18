@@ -21,7 +21,7 @@ export function ThemedTextInput({
       style={[
         { 
           color, 
-          backgroundColor: useThemeColor({ light: lightColor ? 'white' : '#1e1e1e', dark: darkColor ? 'black' : '#333' }, 'background'), 
+          backgroundColor: useThemeColor({ light: 'white', dark: 'black' }, 'background'), 
           borderColor: useThemeColor({ light: lightColor ? '#ccc' : '#555', dark: darkColor ? '#888' : '#444' }, 'border'), 
           padding: 10,
         },

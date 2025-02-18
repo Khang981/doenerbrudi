@@ -10,6 +10,7 @@ const MAPPING = {
   // See MaterialIcons here: https://icons.expo.fyi
   // See SF Symbols in the SF Symbols app on Mac.
   'plus': 'add',
+  'person.crop.circle.badge.plus': 'person-add',
   'house.fill': 'home',
   'person.fill': 'person',
   'person.2.fill': 'people',

@@ -106,17 +106,17 @@ class Post {
         VALUES (${body.chatId},${body.senderId},${body.messagetext})
         `;
 
-        return db.execute(sql, values);
+        return db.execute(sql);
     }
 
-    static async postFriendRequest(body) {
+    static postFriendRequest(body) {
         const sql =
         `
-        INSERT INTO friendrequest (senderId, senderId, messagetext)
-        VALUES (${body.chatId},${body.senderId},${body.messagetext})
+        INSERT INTO friendrequest (senderId, receiverId)
+        VALUES (${body.senderId},${body.receiverId})
         `;
 
-        return db.execute(sql, values);
+        return db.execute(sql);
     }
 
 }

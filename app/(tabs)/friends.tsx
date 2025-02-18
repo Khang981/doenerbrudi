@@ -1,4 +1,4 @@
-import { StyleSheet, Image, RefreshControl, ScrollView, Platform, FlatList, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Image, RefreshControl, ScrollView, Platform, FlatList, View, TouchableOpacity, Modal, ActivityIndicator, Alert } from 'react-native';
 import { Collapsible } from '@/components/Collapsible';
 import { ExternalLink } from '@/components/ExternalLink';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
@@ -6,16 +6,124 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useUserContext } from '../context';
-import React from 'react';
+import React, { useRef } from 'react';
 import axios from 'axios';
+import { ThemedTextInput } from '@/components/ThemedTextInput';
+import { ThemedModal } from '@/components/ThemedModal';
 
-const FloatingButton = () => {
+const AddFriendsButton = () => {
+  const [openModal, setOpenModal] = React.useState(false);
+  const [data, setData] = React.useState([]);
+  const [loading, setLoading] = React.useState(false);
+  const timeoutRef = useRef(null);
+
+  const handleSendFriendRequest = async (senderId, receiverId) => {
+    
+    try {
+      const response = await axios({
+        method: 'post',
+        url: 'http://10.204.161.62:3001/doenerbrudi/postFriendRequest',
+        data: {
+          senderId: senderId,
+          receiverId: receiverId
+        }
+      });
+      
+      if (response.data.success) {
+        Alert.alert('Erfolg', 'Deine Freundschaftsanfrage wurde gesendet.');
+      } else {
+        Alert.alert('Fehler', 'Ein Fehler ist aufgetreten. Bitte versuche es später noch einmal.');
+      }
+    } catch (error) {
+      console.error("error", error);
+      Alert.alert('Fehler', 'Ein Fehler ist aufgetreten. Bitte versuche es später noch einmal.');
+    }
+  }
+
+  const handleSearchChange = (searchValue) => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    setData([]);
+    setLoading(true);
+
+    timeoutRef.current = setTimeout(async () => {
+      console.log('test', searchValue);
+      if(!!searchValue){
+        try {
+          const response = await axios({
+            method: 'post',
+            url: 'http://10.204.161.62:3001/doenerbrudi/getFindUser',
+            data: {
+              search: searchValue
+            }
+          });
+          setData(response.data.response);
+        } catch (error) {
+          console.error("Fehler beim Abrufen der Daten:", error);
+        }
+      }
+      setLoading(false);
+    }, 1000); //Verzögerung
+  };
+
   return (
+  <>
     <View style={styles.buttonContainer}>
-      <TouchableOpacity style={styles.button} onPress={() => { }}>
-        {/* Icon oder Text hinzufügen */}
+      <TouchableOpacity style={styles.button} onPress={() => setOpenModal(!openModal)}>
+        <IconSymbol size={28} name="plus" color={'#fffff'}/>
       </TouchableOpacity>
     </View>
+    
+    <ThemedModal
+      animationType="slide"
+      visible={openModal}
+      onRequestClose={() => setOpenModal(false)}
+    >
+      <View>
+        <ThemedText style={styles.text}>Name oder Email:</ThemedText>
+        <ThemedTextInput
+          style={styles.input}
+          placeholder="Suche"
+          onChangeText={handleSearchChange}
+          // value={search}
+        />
+        {loading && <ActivityIndicator size="large" color="#0000ff" />}
+        {data.length != 0 && data.map(e => (
+          <>
+            {/* <ThemedText>{e.nickname ?? e.username}</ThemedText>
+            <ThemedText>{e.email}</ThemedText> */}
+            <View style={styles.card}>
+              <View style={styles.cardHeader}>
+                <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                  <ThemedText style={styles.cardTitle} numberOfLines={1} ellipsizeMode="tail">{e.nickname ?? e.username}#{e.id}</ThemedText>
+                  <TouchableOpacity style={{
+                    backgroundColor: '#dedede',
+                    borderRadius: 30,
+                    width: 30,
+                    height: 30,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    elevation: 5, // Für Android-Schatten
+                    shadowColor: '#000', // Für iOS-Schatten
+                    shadowOffset: { width: 0, height: 2 },
+                    shadowOpacity: 0.3,
+                  }} onPress={() => {handleSendFriendRequest("1","5")}}>
+                    <IconSymbol size={14} name="person.crop.circle.badge.plus" color={'#fffff'}/>
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <View style={styles.cardContent}>
+                <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                  <ThemedText>{e.email}</ThemedText>
+                </View>
+              </View>
+            </View>
+          </>
+        ))}
+      </View>
+    </ThemedModal>
+  </>  
   );
 };
 
@@ -43,9 +151,6 @@ export default function Friends() {
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState(null);
   const [refreshing, setRefreshing] = React.useState(false);
-
-  console.log("ASDF", data);
-
 
   React.useEffect(() => {
     fetchData();
@@ -95,7 +200,7 @@ export default function Friends() {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       />
-      <FloatingButton/>
+      <AddFriendsButton/>
     </View>
   );
 }
@@ -141,7 +246,7 @@ const styles = StyleSheet.create({
     right: 40,
   },
   button: {
-    backgroundColor: 'blue',
+    backgroundColor: '#dedede',
     borderRadius: 30,
     width: 60,
     height: 60,
@@ -151,5 +256,41 @@ const styles = StyleSheet.create({
     shadowColor: '#000', // Für iOS-Schatten
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    padding: 10,
+    marginLeft: 10,
+    marginRight: 10,
+    marginBottom: 10,
+    borderRadius: 10, 
+  },
+  text: {
+    // borderWidth: 1,
+    // borderColor: '#ccc',
+    padding: 10,
+    // marginLeft: 10,
+    marginRight: 10,
+    // marginBottom: 10,
+    borderRadius: 10, 
+  },
+  card: {
+    backgroundColor: '#ff8380',
+    borderRadius: 8,
+    elevation: 5, // Für Android-Schatten
+    margin: 16,
+  },
+  cardHeader: {
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+  },
+  cardTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  cardContent: {
+    padding: 16,
   },
 });
