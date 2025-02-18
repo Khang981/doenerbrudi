@@ -193,4 +193,20 @@ hiddenContainer: {
   justifyContent: "center",
   backgroundColor: "transparent",
 },
+
+modalHeader: {
+  flexDirection: "row",
+  justifyContent: "space-between",
+  alignItems: "center",
+  padding: 16,
+  borderBottomWidth: 1,
+  borderBottomColor: "#ddd",
+},
+modalTitle: {
+  fontSize: 18,
+  fontWeight: "bold",
+},
+closeButtonFriends: {
+  padding: 8, 
+},
   });

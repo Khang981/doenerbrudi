@@ -80,7 +80,7 @@ export default function Dashboard() {
             <View>
                 {data.map( e => (
                   <>
-                    <Card key={e.id} title={e.businessName} content={e.businessLocation} />
+                    <Card key={e.id} data={e} />
                   </>
                 ))}
             </View>

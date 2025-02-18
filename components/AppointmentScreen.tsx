@@ -196,7 +196,15 @@ const AppointmentScreen = ({ shop, onClose, onConfirm }) => {
     >
         <View style={styles.modalOverlay}>
         <View style={styles.modalContainer}>
-        <Text style={styles.modalTitle}>Freunde einladen</Text>
+        <View style={styles.modalHeader}>
+            <Text style={styles.modalTitle}>Freunde einladen</Text>
+            <TouchableOpacity
+                style={styles.closeButtonFriends}
+                onPress={() => setShowFriendModal(false)}
+            >
+                <AntDesign name="close" size={24} color="red" />
+            </TouchableOpacity>
+        </View>
 
       {/* Liste der Freunde */}
         <FlatList
@@ -213,10 +221,6 @@ const AppointmentScreen = ({ shop, onClose, onConfirm }) => {
             )}
         />
 
-      {/* Schließen-Button */}
-        <TouchableOpacity style={styles.closeButton} onPress={() => setShowFriendModal(false)}>
-        <Text style={styles.closeButtonText}>Schließen</Text>
-        </TouchableOpacity>
     </View>
     </View>
 </Modal>
