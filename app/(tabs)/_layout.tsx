@@ -30,7 +30,7 @@ export default function TabLayout() {
         name="friends"
         options={{
           title: 'Freunde',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="people" color={color} />,
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="person.2.fill" color={color} />,
         }}
       />
       <Tabs.Screen

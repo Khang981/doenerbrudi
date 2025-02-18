@@ -33,10 +33,6 @@ export default function Dashboard() {
 
   React.useEffect(() => {
     fetchData();
-  }, []); 
-
-  React.useEffect(() => {
-    fetchData();
   }, []);
 
   const fetchData = async () => {

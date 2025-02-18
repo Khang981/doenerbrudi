@@ -1,102 +1,155 @@
-import { StyleSheet, Image, Platform } from 'react-native';
-
+import { StyleSheet, Image, RefreshControl, ScrollView, Platform, FlatList, View, TouchableOpacity } from 'react-native';
 import { Collapsible } from '@/components/Collapsible';
 import { ExternalLink } from '@/components/ExternalLink';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { useUserContext } from '../context';
+import React from 'react';
+import axios from 'axios';
 
-export default function Friends() {
+const FloatingButton = () => {
+  return (
+    <View style={styles.buttonContainer}>
+      <TouchableOpacity style={styles.button} onPress={() => { }}>
+        {/* Icon oder Text hinzufügen */}
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+
+const UserListItem = ({ item }) => {
   return (
     <>
-     <ParallaxScrollView>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Explore</ThemedText>
-      </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
-        </ThemedText>
-        <Image source={require('@/assets/images/react-logo.png')} style={{ alignSelf: 'center' }} />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Custom fonts">
-        <ThemedText>
-          Open <ThemedText type="defaultSemiBold">app/_layout.tsx</ThemedText> to see how to load{' '}
-          <ThemedText style={{ fontFamily: 'SpaceMono' }}>
-            custom fonts such as this one.
-          </ThemedText>
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/versions/latest/sdk/font">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{' '}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-          what the user's current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful <ThemedText type="defaultSemiBold">react-native-reanimated</ThemedText>{' '}
-          library to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
-     </ParallaxScrollView>
-</>
+      <View style={styles.itemContainer}>
+        {/* <Image source={{ uri: item.avatar }} style={styles.avatar} /> */}
+        <IconSymbol size={28} name="person.fill" color={'#ff8380'} style={styles.avatar}/>
+        <View style={styles.textContainer}>
+          <ThemedText style={styles.name}>{item.nickname ?? item}#{item.userId}</ThemedText>
+          <ThemedText style={styles.email}>{item.email}</ThemedText>
+        </View>
+      </View>
+      <View style={styles.divider} /> 
+    </>
+  );
+};
+
+export default function Friends() {
+  const { userId } = useUserContext();
+  
+  const [data, setData] = React.useState([]);  
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState(null);
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  console.log("ASDF", data);
+
+
+  React.useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const response = await axios({
+        method: 'post',
+        url: 'http://10.204.161.62:3001/doenerbrudi/Friends',
+        data: {
+          userId: userId
+        }
+      });
+      setData(response.data.response);
+    } catch (error) {
+      setError(error);
+      console.error("Fehler beim Abrufen der Daten:", error);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    fetchData();
+  }, []);
+  
+  if (loading) {
+    return <ThemedText>Daten werden geladen...</ThemedText>; 
+  }
+
+  if (error) {
+    return <ThemedText>Fehler: {error?.message}</ThemedText>;
+  }
+
+  return (
+    <View>
+      <FlatList
+        data={data}
+        renderItem={({ item }) => <UserListItem item={item} />}
+        keyExtractor={(item) => item.userId}
+        style={styles.list}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      />
+      <FloatingButton/>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
+  list: {
+    padding: 16,
+    paddingTop: 60,
   },
-  titleContainer: {
+  itemContainer: {
     flexDirection: 'row',
-    gap: 8,
+    alignItems: 'center',
+    marginBottom: 5,
+  },
+  avatar: {
+    width: 50,
+    height: 50,
+    borderRadius: 25, // Für einen runden Avatar
+    marginRight: 16,
+    paddingTop: 15,
+    paddingLeft: 15,
+  },
+  textContainer: {
+    flex: 1,
+  },
+  name: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 4,
+  },
+  email: {
+    fontSize: 14,
+    color: '#888', // Leicht abgedunkelte Farbe
+  },
+  divider: {
+    height: 1, // Dicke des Trenners
+    backgroundColor: '#ccc', // Farbe des Trenners (hellgrau)
+    marginVertical: 16, // Abstand oberhalb und unterhalb des Trenners
+  },
+  buttonContainer: {
+    position: 'absolute',
+    bottom: 140,
+    right: 40,
+  },
+  button: {
+    backgroundColor: 'blue',
+    borderRadius: 30,
+    width: 60,
+    height: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 5, // Für Android-Schatten
+    shadowColor: '#000', // Für iOS-Schatten
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
   },
 });
