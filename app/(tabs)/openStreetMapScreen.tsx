@@ -288,24 +288,24 @@ return (
                         style={styles.closeButton}
                         onPress={() => setModalVisible(false)}
                     >
-                    <AntDesign name="close" size={24} color="black" />
-                </TouchableOpacity>
+                        <AntDesign name="close" size={24} color="black" />
+                    </TouchableOpacity>
 
-                <TextInput // Textinput für Ortseingabe
-                    style={styles.input}
-                    placeholder="Stadt oder Straße eingeben"
-                    value={city}
-                    onChangeText={setCity}
-                />
-                <Button title="Suchen" onPress={handleCitySearch} />
+                    <TextInput // Textinput für Ortseingabe
+                        style={styles.input}
+                        placeholder="Stadt oder Straße eingeben"
+                        value={city}
+                        onChangeText={setCity}
+                    />
+                    <Button title="Suchen" onPress={handleCitySearch} />
 
-                <FlatList
-                data={filterUniqueStreets(searchResults)}
-                keyExtractor={(item, index) => index.toString()}
-                renderItem={({item}) => renderLocationItem({item})}
-                />
+                    <FlatList
+                    data={filterUniqueStreets(searchResults)}
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={({item}) => renderLocationItem({item})}
+                    />
 
-            </View>
+                </View>
         </View>
     </Modal>
 

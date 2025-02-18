@@ -1,5 +1,10 @@
 import Card from '@/components/Card';
 import { ThemedText } from '@/components/ThemedText';
+import {Button, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
+import { useBottomTabOverflow } from '@/components/ui/TabBarBackground';
+import { useRouter } from 'expo-router';
+>>>>>>> master
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { useRouter } from 'expo-router';
@@ -68,8 +73,9 @@ export default function Dashboard() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
-        <Button title="Abmelden" onPress={handleLogout} /> {/* Füge den Button hinzu */}
-
+        <TouchableOpacity style={styles.loginButton} onPress={handleLogout}>
+          <Text style={styles.loginButton}>Abmelden</Text>
+        </TouchableOpacity>
         <ThemedText>
             bevorstehende Termine
         </ThemedText>
@@ -100,5 +106,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'pink',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  loginButton: {
+    backgroundColor: '#ff8380',
+    // borderRadius: 5,
+    // padding: 10,
+    alignItems: 'center',
+    marginBottom: 10,
+    marginTop: 10,
   },
 });
