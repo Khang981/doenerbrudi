@@ -26,7 +26,7 @@ const formatDate = (isoString) => {
 
 const Card = ({ data }) => {
   const [modalVisible, setModalVisible] = useState(false);
-  console.log("Data: ", data);
+  // console.log("Data: ", data);
 
   return (
     <>
