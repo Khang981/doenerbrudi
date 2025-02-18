@@ -10,6 +10,7 @@ import React, { useRef } from 'react';
 import axios from 'axios';
 import { ThemedTextInput } from '@/components/ThemedTextInput';
 import { ThemedModal } from '@/components/ThemedModal';
+import { AntDesign } from '@expo/vector-icons';
 
 const AddFriendsButton = () => {
   const [openModal, setOpenModal] = React.useState(false);
@@ -80,7 +81,23 @@ const AddFriendsButton = () => {
       visible={openModal}
       onRequestClose={() => setOpenModal(false)}
     >
-      <View>
+      <View style={{marginTop: 40}}>
+        <TouchableOpacity
+            style={{
+              position: 'absolute',
+              top: 0,
+              right: 15,
+              zIndex: 10,
+              backgroundColor: '#dedede',
+              padding: 5,
+              borderRadius: 30,
+              elevation: 5,
+              shadowColor: "#000",
+            }}
+            onPress={() => setOpenModal(false)}
+        >
+            <AntDesign name="close" size={24} color="black" />
+        </TouchableOpacity>
         <ThemedText style={styles.text}>Name oder Email:</ThemedText>
         <ThemedTextInput
           style={styles.input}
