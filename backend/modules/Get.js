@@ -32,7 +32,7 @@ class Get {
                 email, 
                 lastlogin 
             FROM user  
-            WHERE deleted = 0 AND (username LIKE '%${search}%' OR nickname LIKE '%${search}%')
+            WHERE deleted = 0 AND (username LIKE '%${search}%' OR nickname LIKE '%${search}%' OR email LIKE '%${search}%')
         `;
             
         try{

@@ -18,10 +18,17 @@ export const Colors = {
   },
   dark: {
     text: '#ECEDEE',
-    background: '#ff8380',
+    background: '#151718',
     tint: tintColorDark,
     icon: '#9BA1A6',
     tabIconDefault: '#9BA1A6',
     tabIconSelected: tintColorDark,
   },
 };
+
+/** CSS HEX 
+--lebhaftes-gelbliches-rosa: #ff8380;
+--lebhaftes-rot: #f4181e;
+--lebhaftes-rot-2: #fe474c;
+--weiß: #ffffff;
+--lebhaftes-rötliches-orange: #fd0400; */

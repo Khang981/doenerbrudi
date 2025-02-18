@@ -218,7 +218,7 @@ exports.postFriendRequest = async (req, res, next) => {
     let post = new Post();
     try{
         post = await Post.postFriendRequest(body);
-        console.log(post[0]);
+        console.log("postFriendRequest",post[0]);
         res.json({
             success: true,
             response: post[0]

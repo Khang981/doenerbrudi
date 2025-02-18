@@ -1,102 +1,296 @@
-import { StyleSheet, Image, Platform } from 'react-native';
-
+import { StyleSheet, Image, RefreshControl, ScrollView, Platform, FlatList, View, TouchableOpacity, Modal, ActivityIndicator, Alert } from 'react-native';
 import { Collapsible } from '@/components/Collapsible';
 import { ExternalLink } from '@/components/ExternalLink';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { useUserContext } from '../context';
+import React, { useRef } from 'react';
+import axios from 'axios';
+import { ThemedTextInput } from '@/components/ThemedTextInput';
+import { ThemedModal } from '@/components/ThemedModal';
 
-export default function Friends() {
+const AddFriendsButton = () => {
+  const [openModal, setOpenModal] = React.useState(false);
+  const [data, setData] = React.useState([]);
+  const [loading, setLoading] = React.useState(false);
+  const timeoutRef = useRef(null);
+
+  const handleSendFriendRequest = async (senderId, receiverId) => {
+    
+    try {
+      const response = await axios({
+        method: 'post',
+        url: 'http://10.204.161.62:3001/doenerbrudi/postFriendRequest',
+        data: {
+          senderId: senderId,
+          receiverId: receiverId
+        }
+      });
+      
+      if (response.data.success) {
+        Alert.alert('Erfolg', 'Deine Freundschaftsanfrage wurde gesendet.');
+      } else {
+        Alert.alert('Fehler', 'Ein Fehler ist aufgetreten. Bitte versuche es später noch einmal.');
+      }
+    } catch (error) {
+      console.error("error", error);
+      Alert.alert('Fehler', 'Ein Fehler ist aufgetreten. Bitte versuche es später noch einmal.');
+    }
+  }
+
+  const handleSearchChange = (searchValue) => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    setData([]);
+    setLoading(true);
+
+    timeoutRef.current = setTimeout(async () => {
+      console.log('test', searchValue);
+      if(!!searchValue){
+        try {
+          const response = await axios({
+            method: 'post',
+            url: 'http://10.204.161.62:3001/doenerbrudi/getFindUser',
+            data: {
+              search: searchValue
+            }
+          });
+          setData(response.data.response);
+        } catch (error) {
+          console.error("Fehler beim Abrufen der Daten:", error);
+        }
+      }
+      setLoading(false);
+    }, 1000); //Verzögerung
+  };
+
+  return (
+  <>
+    <View style={styles.buttonContainer}>
+      <TouchableOpacity style={styles.button} onPress={() => setOpenModal(!openModal)}>
+        <IconSymbol size={28} name="plus" color={'#fffff'}/>
+      </TouchableOpacity>
+    </View>
+    
+    <ThemedModal
+      animationType="slide"
+      visible={openModal}
+      onRequestClose={() => setOpenModal(false)}
+    >
+      <View>
+        <ThemedText style={styles.text}>Name oder Email:</ThemedText>
+        <ThemedTextInput
+          style={styles.input}
+          placeholder="Suche"
+          onChangeText={handleSearchChange}
+          // value={search}
+        />
+        {loading && <ActivityIndicator size="large" color="#0000ff" />}
+        {data.length != 0 && data.map(e => (
+          <>
+            {/* <ThemedText>{e.nickname ?? e.username}</ThemedText>
+            <ThemedText>{e.email}</ThemedText> */}
+            <View style={styles.card}>
+              <View style={styles.cardHeader}>
+                <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                  <ThemedText style={styles.cardTitle} numberOfLines={1} ellipsizeMode="tail">{e.nickname ?? e.username}#{e.id}</ThemedText>
+                  <TouchableOpacity style={{
+                    backgroundColor: '#dedede',
+                    borderRadius: 30,
+                    width: 30,
+                    height: 30,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    elevation: 5, // Für Android-Schatten
+                    shadowColor: '#000', // Für iOS-Schatten
+                    shadowOffset: { width: 0, height: 2 },
+                    shadowOpacity: 0.3,
+                  }} onPress={() => {handleSendFriendRequest("1","5")}}>
+                    <IconSymbol size={14} name="person.crop.circle.badge.plus" color={'#fffff'}/>
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <View style={styles.cardContent}>
+                <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                  <ThemedText>{e.email}</ThemedText>
+                </View>
+              </View>
+            </View>
+          </>
+        ))}
+      </View>
+    </ThemedModal>
+  </>  
+  );
+};
+
+
+const UserListItem = ({ item }) => {
   return (
     <>
-     <ParallaxScrollView>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Explore</ThemedText>
-      </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
-        </ThemedText>
-        <Image source={require('@/assets/images/react-logo.png')} style={{ alignSelf: 'center' }} />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Custom fonts">
-        <ThemedText>
-          Open <ThemedText type="defaultSemiBold">app/_layout.tsx</ThemedText> to see how to load{' '}
-          <ThemedText style={{ fontFamily: 'SpaceMono' }}>
-            custom fonts such as this one.
-          </ThemedText>
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/versions/latest/sdk/font">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{' '}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-          what the user's current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful <ThemedText type="defaultSemiBold">react-native-reanimated</ThemedText>{' '}
-          library to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
-     </ParallaxScrollView>
-</>
+      <View style={styles.itemContainer}>
+        {/* <Image source={{ uri: item.avatar }} style={styles.avatar} /> */}
+        <IconSymbol size={28} name="person.fill" color={'#ff8380'} style={styles.avatar}/>
+        <View style={styles.textContainer}>
+          <ThemedText style={styles.name}>{item.nickname ?? item}#{item.userId}</ThemedText>
+          <ThemedText style={styles.email}>{item.email}</ThemedText>
+        </View>
+      </View>
+      <View style={styles.divider} /> 
+    </>
+  );
+};
+
+export default function Friends() {
+  const { userId } = useUserContext();
+  
+  const [data, setData] = React.useState([]);  
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState(null);
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  React.useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const response = await axios({
+        method: 'post',
+        url: 'http://10.204.161.62:3001/doenerbrudi/Friends',
+        data: {
+          userId: userId
+        }
+      });
+      setData(response.data.response);
+    } catch (error) {
+      setError(error);
+      console.error("Fehler beim Abrufen der Daten:", error);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    fetchData();
+  }, []);
+  
+  if (loading) {
+    return <ThemedText>Daten werden geladen...</ThemedText>; 
+  }
+
+  if (error) {
+    return <ThemedText>Fehler: {error?.message}</ThemedText>;
+  }
+
+  return (
+    <View>
+      <FlatList
+        data={data}
+        renderItem={({ item }) => <UserListItem item={item} />}
+        keyExtractor={(item) => item.userId}
+        style={styles.list}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      />
+      <AddFriendsButton/>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
+  list: {
+    padding: 16,
+    paddingTop: 60,
   },
-  titleContainer: {
+  itemContainer: {
     flexDirection: 'row',
-    gap: 8,
+    alignItems: 'center',
+    marginBottom: 5,
+  },
+  avatar: {
+    width: 50,
+    height: 50,
+    borderRadius: 25, // Für einen runden Avatar
+    marginRight: 16,
+    paddingTop: 15,
+    paddingLeft: 15,
+  },
+  textContainer: {
+    flex: 1,
+  },
+  name: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 4,
+  },
+  email: {
+    fontSize: 14,
+    color: '#888', // Leicht abgedunkelte Farbe
+  },
+  divider: {
+    height: 1, // Dicke des Trenners
+    backgroundColor: '#ccc', // Farbe des Trenners (hellgrau)
+    marginVertical: 16, // Abstand oberhalb und unterhalb des Trenners
+  },
+  buttonContainer: {
+    position: 'absolute',
+    bottom: 140,
+    right: 40,
+  },
+  button: {
+    backgroundColor: '#dedede',
+    borderRadius: 30,
+    width: 60,
+    height: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 5, // Für Android-Schatten
+    shadowColor: '#000', // Für iOS-Schatten
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    padding: 10,
+    marginLeft: 10,
+    marginRight: 10,
+    marginBottom: 10,
+    borderRadius: 10, 
+  },
+  text: {
+    // borderWidth: 1,
+    // borderColor: '#ccc',
+    padding: 10,
+    // marginLeft: 10,
+    marginRight: 10,
+    // marginBottom: 10,
+    borderRadius: 10, 
+  },
+  card: {
+    backgroundColor: '#ff8380',
+    borderRadius: 8,
+    elevation: 5, // Für Android-Schatten
+    margin: 16,
+  },
+  cardHeader: {
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+  },
+  cardTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  cardContent: {
+    padding: 16,
   },
 });

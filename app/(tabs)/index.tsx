@@ -4,7 +4,7 @@ import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import Card from '@/components/Card';
-import {Button, RefreshControl, ScrollView, StyleSheet, View} from 'react-native';
+import {Button, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import { useBottomTabOverflow } from '@/components/ui/TabBarBackground';
 import { useRouter } from 'expo-router';
@@ -30,10 +30,6 @@ export default function Dashboard() {
       console.error('error login:', error);
     }
   };
-
-  React.useEffect(() => {
-    fetchData();
-  }, []); 
 
   React.useEffect(() => {
     fetchData();
@@ -75,8 +71,9 @@ export default function Dashboard() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
-        <Button title="Abmelden" onPress={handleLogout} /> {/* Füge den Button hinzu */}
-
+        <TouchableOpacity style={styles.loginButton} onPress={handleLogout}>
+          <Text style={styles.loginButton}>Abmelden</Text>
+        </TouchableOpacity>
         <ThemedText>
             bevorstehende Termine
         </ThemedText>
@@ -107,5 +104,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'pink',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  loginButton: {
+    backgroundColor: '#ff8380',
+    // borderRadius: 5,
+    // padding: 10,
+    alignItems: 'center',
+    marginBottom: 10,
+    marginTop: 10,
   },
 });
