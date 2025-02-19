@@ -10,7 +10,7 @@ import React from 'react';
 import { useUserContext } from '../context';
 
 export default function Dashboard() {
-  // const apiUrl = process.env.REACT_APP_API_URL;
+  const apiUrl = process.env.EXPO_PUBLIC_API_URL;
   const { userId } = useUserContext();
 
   const [data, setData] = React.useState([]);  
@@ -38,7 +38,7 @@ export default function Dashboard() {
     try {
       const response = await axios({
         method: 'post',
-        url: 'http://10.204.161.62:3001/doenerbrudi/getAppointment',
+        url: apiUrl + '/doenerbrudi/getAppointment',
         data: {
           userId: userId
         }

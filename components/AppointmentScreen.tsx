@@ -6,6 +6,7 @@ import { FlatList, Modal, Platform, Text, TouchableOpacity, View } from 'react-n
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { useUserContext } from '../app/context';
 import styles from '../constants/styles/AppointmentStyle';
+const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 
 const AppointmentScreen = ({ shop, onClose, onConfirm }) => {
     const {userId} = useUserContext();
@@ -33,18 +34,18 @@ const AppointmentScreen = ({ shop, onClose, onConfirm }) => {
     };
 
     const inviteFriends = async () => {
-    console.log("Neue Freunde einladen");
+    // console.log("Neue Freunde einladen");
 
     try {
         const {data} = await axios({
             method: 'post',
-            url: 'http://10.204.161.62:3001/doenerbrudi/Friends',
+            url: apiUrl + '/doenerbrudi/Friends',
             data: {
                 userId: userId
             }
         });
         const friendsData = data.response;
-        console.log("Friendsdata:", friendsData);
+        // console.log("Friendsdata:", friendsData);
 
         if (!Array.isArray(friendsData)) {
             console.error("Fehler: Erwartetes Array, aber erhalten:", friendsData);
@@ -52,7 +53,7 @@ const AppointmentScreen = ({ shop, onClose, onConfirm }) => {
         };
 
         const filteredFriends = friendsData.filter(friend => !selectedFriends.some(invited => invited.userId === friend.userId));
-        console.log("filteredFriends:", filteredFriends);
+        // console.log("filteredFriends:", filteredFriends);
         setAvailableFriends(filteredFriends);
         setShowFriendModal(true);
     } catch (error) {
@@ -61,7 +62,7 @@ const AppointmentScreen = ({ shop, onClose, onConfirm }) => {
     };
 
     const inviteFriend = (friend) => {
-        console.log(`Freund eingeladen: ${friend.nickname}`);
+        // console.log(`Freund eingeladen: ${friend.nickname}`);
 
         setFriends((prevFriends) => {
             const isAlreadyInList = prevFriends.some((f) => f.id === friend.userId);
@@ -91,7 +92,7 @@ const AppointmentScreen = ({ shop, onClose, onConfirm }) => {
     
         const acceptedFriends = friends.filter(friend => friend.status !== "Nein");
 
-        console.log("termin-Daten werden gesendet:", {date, acceptedFriends});
+        // console.log("termin-Daten werden gesendet:", {date, acceptedFriends});
 
         const businessName = shop?.tags?.name;
 
@@ -101,15 +102,15 @@ const AppointmentScreen = ({ shop, onClose, onConfirm }) => {
         const city = shop?.tags?.["addr:city"] || "Stadt unbekannt";
         const businessLocation = `${street} ${houseNumber}, ${postcode} ${city}`;
 
-        console.log("Freunde id:", friends.filter(friend => friend.status !== "Nein").map(friend => friend.id))
+        // console.log("Freunde id:", friends.filter(friend => friend.status !== "Nein").map(friend => friend.id))
         const invitedFriends = [
             userId, friends.filter(friend => friend.status !== "Nein").map(friend => friend.id),
         ];
-        console.log("Invited Friends:", invitedFriends);
+        // console.log("Invited Friends:", invitedFriends);
         try {
             const response = await axios({
                 method: 'post',
-                url: 'http://10.204.161.62:3001/doenerbrudi/postNewAppointment',
+                url: apiUrl + '/doenerbrudi/postNewAppointment',
                 data: {
                     invited: invitedFriends,
                     appointmentDate: date.toISOString(),

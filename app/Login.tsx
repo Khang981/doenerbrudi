@@ -7,6 +7,8 @@ import React from 'react';
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useUserContext } from './context';
 
+const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+
 export default function LoginScreen() {
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
@@ -18,7 +20,7 @@ export default function LoginScreen() {
     try {
       const {data} = await axios({
         method: 'post',
-        url: 'http://10.204.161.62:3001/doenerbrudi/getLogin',
+        url: apiUrl + '/doenerbrudi/getLogin',
         data: {
           username: username,
           password: password

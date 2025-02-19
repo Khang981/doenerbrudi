@@ -11,6 +11,7 @@ import axios from 'axios';
 import { ThemedTextInput } from '@/components/ThemedTextInput';
 import { ThemedModal } from '@/components/ThemedModal';
 import { AntDesign } from '@expo/vector-icons';
+const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 
 const AddFriendsButton = () => {
   const [openModal, setOpenModal] = React.useState(false);
@@ -23,7 +24,7 @@ const AddFriendsButton = () => {
     try {
       const response = await axios({
         method: 'post',
-        url: 'http://10.204.161.62:3001/doenerbrudi/postFriendRequest',
+        url: apiUrl + '/doenerbrudi/postFriendRequest',
         data: {
           senderId: senderId,
           receiverId: receiverId
@@ -54,7 +55,7 @@ const AddFriendsButton = () => {
         try {
           const response = await axios({
             method: 'post',
-            url: 'http://10.204.161.62:3001/doenerbrudi/getFindUser',
+            url: apiUrl + '/doenerbrudi/getFindUser',
             data: {
               search: searchValue
             }
@@ -178,7 +179,7 @@ export default function Friends() {
     try {
       const response = await axios({
         method: 'post',
-        url: 'http://10.204.161.62:3001/doenerbrudi/Friends',
+        url: apiUrl + '/doenerbrudi/Friends',
         data: {
           userId: userId
         }
